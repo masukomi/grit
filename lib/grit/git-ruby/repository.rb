@@ -361,7 +361,11 @@ module Grit
 
             if !opts[:path_limiter]
               output = c.raw_log(sha)
-              array << [sha, output, c.committer.date]
+                if (not ( (opts[:since] && opts[:since].is_a?(Time) && (opts[:since] > c.committer.date)))  \
+                  and not  (opts[:until] && opts[:until].is_a?(Time) && (opts[:until] < c.committer.date)))
+
+                  array << [sha, output, c.committer.date]
+                end
             end
 
             if (opts[:max_count] && (array.size + total_size) >= opts[:max_count])
